@@ -1,0 +1,33 @@
+import mongoose from "mongoose";
+
+const rosterSchema = new mongoose.Schema({
+    player: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player',
+        required: true,
+    },
+    joinDate: {
+        type: Date,
+        required: true,
+    },
+    active: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const teamSchema = new mongoose.Schema({
+    name:{
+        type: String,
+        required: true,
+        unique: true,
+        minlength: 3,
+        maxLength: 50
+    },
+    foundeAt:{
+        type: Date,
+    },
+    roster: [{
+        type: [rosterSchema]
+    }], 
+});
