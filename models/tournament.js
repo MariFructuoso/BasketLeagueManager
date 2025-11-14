@@ -18,7 +18,7 @@ const tournamentSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        enum: ['Spring', 'Summer', 'Fall', 'Winter'],
+        enum: ['Spring', 'Summer', 'Autumn', 'Winter'],
     },
     organizer:{
         //nombre del organizador

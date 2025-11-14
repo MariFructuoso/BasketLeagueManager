@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const matchSchema = new mongoose.Schema({
-    Tournament: {
+    tournament: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tournament',
         required: true,
@@ -37,10 +37,7 @@ const matchSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-    PlayersStats: {
-        type: [playerStatsSchema]
-    }
-    
+        playersStats: [playerStatsSchema]
 });
 matchSchema.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
 
@@ -80,3 +77,5 @@ let playerStatsSchema = new mongoose.Schema({
     }
 });
 
+export const Match = mongoose.model('Match', matchSchema);
+export const PlayerStats = mongoose.model('PlayerStats', playerStatsSchema);

@@ -25,10 +25,11 @@ const teamSchema = new mongoose.Schema({
         minlength: 3,
         maxLength: 50
     },
-    foundeAt:{
+    foundedAt:{
         type: Date,
     },
-    roster: [{
-        type: [rosterSchema]
-    }], 
+        roster: [rosterSchema]
 });
+
+export const Team = mongoose.model('Team', teamSchema);
+export const Roster = mongoose.model('Roster', rosterSchema);
