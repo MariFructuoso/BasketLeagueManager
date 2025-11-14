@@ -6,17 +6,21 @@ const playerSchema = new mongoose.Schema({
         required: true,
         unique: true,
         minlength: 3,
-        maxLength: 20
+        maxLength: 20,
+        trim: true,
     },
     name:{
         type: String,
         required: true,
+        trim: true,
         minlength: 3,
         maxLength: 50
+
     },
     country: {
         type: String,
         required: true,
+        trim: true,
         match: /^[A-Z]{2}$/,
     },
     birthDate: {
@@ -26,6 +30,7 @@ const playerSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
+        trim: true,
         enum: [
             'base',
             'escolta',

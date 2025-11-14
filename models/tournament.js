@@ -4,6 +4,7 @@ const tournamentSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true,
+        trim: true,
         minlength: 3,
         maxLength: 100
     },
@@ -16,6 +17,7 @@ const tournamentSchema = new mongoose.Schema({
     season:{
         type: String,
         required: true,
+        trim: true,
         enum: ['Spring', 'Summer', 'Fall', 'Winter'],
     },
     organizer:{
@@ -27,7 +29,7 @@ const tournamentSchema = new mongoose.Schema({
     teams:{
         //listado de los ID de los equipos inscritos
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Team',
+        ref: 'Team'
     }
 });
 

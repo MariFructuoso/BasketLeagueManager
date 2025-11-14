@@ -12,6 +12,7 @@ const matchSchema = new mongoose.Schema({
     },
     stage: {
         type: String,
+        trim: true,
         required: true,
         enum: ['Group', 'Quarterfinal', 'Semifinal', 'Final'],
     },

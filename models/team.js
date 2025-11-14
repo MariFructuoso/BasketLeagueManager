@@ -19,6 +19,7 @@ const rosterSchema = new mongoose.Schema({
 const teamSchema = new mongoose.Schema({
     name:{
         type: String,
+        trim: true,
         required: true,
         unique: true,
         minlength: 3,
