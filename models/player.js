@@ -32,12 +32,12 @@ const playerSchema = new mongoose.Schema({
         required: true,
         trim: true,
         enum: [
-            'base',
-            'escolta',
-            'alero',
-            'ala-pivot',
-            'pivot',
-            'polivalente'
+            'Base',
+            'Escolta',
+            'Alero',
+            'Ala-pivot',
+            'Pivot',
+            'Polivalente'
         ],
     },
 });

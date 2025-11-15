@@ -1,5 +1,41 @@
 import mongoose from "mongoose";
 
+const playerStatsSchema = new mongoose.Schema({
+    player: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player'
+    },
+    team: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team'
+    },
+    points: {
+        type: Number,
+        min: 0
+    },
+    rebounds: {
+        type: Number,
+        min: 0
+    },
+    assists: {
+        type: Number,
+        min: 0
+    },
+    steals: {
+        type: Number,
+        min: 0
+    },
+    fouls: {
+        type: Number,
+        min: 0
+    },
+    mvp: {
+        type: Boolean,
+        default: false
+    }
+}, { _id: false }); // Opcional: evita que cada subdocumento tenga _id
+
+// 2️⃣ SEGUNDO: Definir matchSchema (usando playerStatsSchema)
 const matchSchema = new mongoose.Schema({
     tournament: {
         type: mongoose.Schema.Types.ObjectId,
@@ -12,7 +48,6 @@ const matchSchema = new mongoose.Schema({
     },
     stage: {
         type: String,
-        trim: true,
         required: true,
         enum: ['Group', 'Quarterfinal', 'Semifinal', 'Final'],
     },
@@ -25,7 +60,12 @@ const matchSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Team',
         required: true,
-        //validar que sea diferente del homeTeam
+        validate: {
+            validator: function(v) {
+                return v.toString() !== this.homeTeam.toString();
+            },
+            message: 'awayTeam debe ser diferente de homeTeam'
+        }
     },
     homeScore: {
         type: Number,
@@ -37,45 +77,11 @@ const matchSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-        playersStats: [playerStatsSchema]
+    playerStats: [playerStatsSchema]  // ✅ Sin 's' extra
 });
+
 matchSchema.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
 
+const Match = mongoose.model('Match', matchSchema);
 
-let playerStatsSchema = new mongoose.Schema({
-    player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Player'
-    },
-    team: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team'
-    },
-    points: {
-        type: Number,
-        min: [0, 'Mínimo 0']
-    },
-    rebounds: {
-        type: Number,
-        min: [0, 'Mínimo 0']
-    },
-    assists: {
-        type: Number,
-        min: [0, 'Mínimo 0']
-    },
-    steals: {
-        type: Number,
-        min: [0, 'Mínimo 0']
-    },
-    fouls: {
-        type: Number,
-        min: [0, 'Mínimo 0']
-    },
-    mvp: {
-        type: Boolean,
-        default: false
-    }
-});
-
-export const Match = mongoose.model('Match', matchSchema);
-export const PlayerStats = mongoose.model('PlayerStats', playerStatsSchema);
+export default Match;

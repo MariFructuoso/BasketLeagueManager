@@ -23,7 +23,7 @@ const teamSchema = new mongoose.Schema({
         required: true,
         unique: true,
         minlength: 3,
-        maxLength: 50
+        maxlength: 50
     },
     foundedAt:{
         type: Date,
@@ -31,5 +31,5 @@ const teamSchema = new mongoose.Schema({
         roster: [rosterSchema]
 });
 
-export const Team = mongoose.model('Team', teamSchema);
-export const Roster = mongoose.model('Roster', rosterSchema);
+const Team = mongoose.model('Team', teamSchema);
+export default Team;
