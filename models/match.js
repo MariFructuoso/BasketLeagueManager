@@ -33,14 +33,13 @@ const playerStatsSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-}, { _id: false }); // Opcional: evita que cada subdocumento tenga _id
-
-// 2️⃣ SEGUNDO: Definir matchSchema (usando playerStatsSchema)
+});
 const matchSchema = new mongoose.Schema({
     tournament: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tournament',
+        type: String,
         required: true,
+        minlength: 3,
+        maxlength: 100
     },
     date: {
         type: Date,
@@ -77,7 +76,7 @@ const matchSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-    playerStats: [playerStatsSchema]  // ✅ Sin 's' extra
+    playerStats: [playerStatsSchema]  
 });
 
 matchSchema.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
