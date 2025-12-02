@@ -71,7 +71,14 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const newPlayer = new Player(req.body);
+        const newPlayer = new Player({
+            nickname,
+            name,
+            country,
+            birthDate: new Date(birthDate),
+            role
+        });
+        
         const savedPlayer = await newPlayer.save();
         
         res.status(201).json({
