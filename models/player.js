@@ -1,47 +1,47 @@
 import mongoose from "mongoose";
 
-const playerSchema = new mongoose.Schema({
-    nickname:{
+const allowedRoles = [
+  "base",
+  "escolta",
+  "alero",
+  "ala-pivot",
+  "pivot",
+  "polivalente"
+];
+
+let playerSchema = new mongoose.Schema({
+    nickname: {
         type: String,
         required: true,
         unique: true,
         minlength: 3,
-        maxLength: 20,
-        trim: true,
+        maxlength: 20,
+        trim: true
     },
-    name:{
+    name: {
         type: String,
         required: true,
-        trim: true,
         minlength: 3,
-        maxLength: 50
-
+        maxlength: 50,
+        trim: true
     },
     country: {
         type: String,
         required: true,
-        trim: true,
         match: /^[A-Z]{2}$/,
+        trim: true
     },
     birthDate: {
         type: Date,
-        required: true,
+        required: true
     },
     role: {
         type: String,
         required: true,
-        trim: true,
-        enum: [
-            'Base',
-            'Escolta',
-            'Alero',
-            'Ala-pivot',
-            'Pivot',
-            'Polivalente'
-        ],
-    },
+        enum: allowedRoles,
+        trim: true
+    }
 });
 
-const Player = mongoose.model('Player', playerSchema);
-
+let Player = mongoose.model("player", playerSchema);
 export default Player;

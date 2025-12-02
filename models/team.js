@@ -1,35 +1,33 @@
 import mongoose from "mongoose";
 
-const rosterSchema = new mongoose.Schema({
-    player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Player',
-        required: true,
-    },
-    joinDate: {
-        type: Date,
-        required: true,
-    },
-    active: {
-        type: Boolean,
-        default: true,
-    },
-});
-
-const teamSchema = new mongoose.Schema({
-    name:{
+let teamSchema = new mongoose.Schema({
+    name: {
         type: String,
-        trim: true,
         required: true,
         unique: true,
         minlength: 3,
-        maxlength: 50
+        maxlength: 50,
+        trim: true
     },
-    foundedAt:{
-        type: Date,
+    foundedAt: {
+        type: Date
     },
-        roster: [rosterSchema]
+    roster: [{
+        player: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "player",
+            required: true
+        },
+        joinDate: {
+            type: Date,
+            required: true
+        },
+        active: {
+            type: Boolean,
+            default: true
+        }    
+    }]
 });
 
-const Team = mongoose.model('Team', teamSchema);
+let Team = mongoose.model("team", teamSchema);
 export default Team;

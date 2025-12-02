@@ -1,86 +1,77 @@
 import mongoose from "mongoose";
 
-const playerStatsSchema = new mongoose.Schema({
-    player: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Player'
-    },
-    team: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team'
-    },
-    points: {
-        type: Number,
-        min: 0
-    },
-    rebounds: {
-        type: Number,
-        min: 0
-    },
-    assists: {
-        type: Number,
-        min: 0
-    },
-    steals: {
-        type: Number,
-        min: 0
-    },
-    fouls: {
-        type: Number,
-        min: 0
-    },
-    mvp: {
-        type: Boolean,
-        default: false
-    }
-});
-const matchSchema = new mongoose.Schema({
+const allowedStages = [
+    "Group",
+    "Quarterfinal",
+    "Semifinal",
+    "Final"
+];
+
+let matchScheme = new mongoose.Schema({
     tournament: {
         type: String,
         required: true,
         minlength: 3,
         maxlength: 100
     },
-    date: {
+    date : {
         type: Date,
-        required: true,
+        required: true
     },
     stage: {
         type: String,
         required: true,
-        enum: ['Group', 'Quarterfinal', 'Semifinal', 'Final'],
+        enum: allowedStages,
+        trim: true
     },
     homeTeam: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team',
-        required: true,
+        ref: "team"
     },
     awayTeam: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team',
-        required: true,
-        validate: {
-            validator: function(v) {
-                return v.toString() !== this.homeTeam.toString();
-            },
-            message: 'awayTeam debe ser diferente de homeTeam'
-        }
+        ref: "team"
     },
     homeScore: {
         type: Number,
         required: true,
-        min: 0,
+        min: 0
     },
     awayScore: {
         type: Number,
         required: true,
-        min: 0,
-    },
-    playerStats: [playerStatsSchema]  
+        min: 0},
+    playerStats: [{
+        player: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "player"
+        },
+        team: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "team"
+        },
+        points: {
+            type: Number
+        },
+        rebounds: {
+            type: Number
+        },
+        assists: {
+            type: Number
+        },
+        steals: {
+            type: Number
+        },
+        fouls: {
+            type: Number
+        },
+        mvp: {
+            type: Boolean
+        },
+    }]
 });
 
-matchSchema.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
+matchScheme.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
 
-const Match = mongoose.model('Match', matchSchema);
-
+let Match = mongoose.model("match", matchScheme);
 export default Match;
