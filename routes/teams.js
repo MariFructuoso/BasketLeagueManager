@@ -90,7 +90,7 @@ router.post('/:id/roster', async (req, res) => {
         const id  = req.params.id;
         const { player, joinDate, active } = req.body;
 
-        const team = await Team.findById(id);
+        const team = await Team.findById(id );
         if (!team) {
             return res.status(404).json({ error: "El equipo no existe", result: null });
         }
