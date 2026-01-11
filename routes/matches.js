@@ -4,7 +4,7 @@ import Match from "../models/match.js";
 const router = express.Router();
 
 //Listar todos los partidos
-router.get("/", async (req, res) => {
+router.get("/", protegerRuta(), async (req, res) => {
     try {
         const matches = await Match.find()
             .populate("homeTeam", "name")
@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 //Información de un partido
-router.get("/:id", async (req, res) => {
+router.get("/:id", protegerRuta(), async (req, res) => {
     try {
         const match = await Match.findById(req.params.id)
             .populate("homeTeam")
@@ -51,7 +51,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //Añadir un partido 
-router.post('/', async (req, res) => {
+router.post('/', protegerRuta('manager'), async (req, res) => {
     try {
         const { tournament, date, stage, homeTeam, awayTeam, homeScore, awayScore } = req.body;
 
@@ -86,7 +86,7 @@ router.post('/', async (req, res) => {
 });
 
 //Eliminar un partido
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protegerRuta('manager'), async (req, res) => {
     try {
         const id = req.params.id;
 

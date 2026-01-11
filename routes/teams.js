@@ -6,7 +6,7 @@ import Match from '../models/match.js';
 const router = express.Router();
 
 //Lista de todos los equipos
-router.get('/', async (req, res)=> {
+router.get('/', protegerRuta(), async (req, res)=> {
     try{
         const teams = await Team.find();
 
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
 });
 
 //Eliminar un equipo
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', protegerRuta('admin'), async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -85,7 +85,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 //Añadir un jugador al roster
-router.post('/:id/roster', async (req, res) => {
+router.post('/:id/roster', protegerRuta('manager'), async (req, res) => {
     try {
         const id  = req.params.id;
         const { player, joinDate, active } = req.body;
@@ -130,7 +130,7 @@ router.post('/:id/roster', async (req, res) => {
 });
  
 //Dar de baja un jugador del roster
-router.delete('/:id/roster/:playerId', async (req, res) => {
+router.delete('/:id/roster/:playerId', protegerRuta('manager'), async (req, res) => {
     try {
         const { id, playerId } = req.params;
 
@@ -164,7 +164,7 @@ router.delete('/:id/roster/:playerId', async (req, res) => {
 });
 
 //Busca un equipo por ID y muestra toda la información
-router.get('/:id', async (req, res) => {
+router.get('/:id', protegerRuta(), async (req, res) => {
     try {
         const team = await Team.findById(req.params.id).populate('roster.player');
 

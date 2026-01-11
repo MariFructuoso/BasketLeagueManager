@@ -1,11 +1,12 @@
 import express from "express";
 import Player from "../models/player.js";
 import Team from "../models/team.js";
+import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
 // Obtener todos los jugadores
-router.get("/", async (req, res) => {
+router.get("/", protegerRuta(), async (req, res) => {
     try {
         const players = await Player.find();
 
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
 });
 
 //Buscar por nombre
-router.get("/find", async (req, res) => {
+router.get("/find", protegerRuta(), async (req, res) => {
     try {
         const nameQuery = req.query.name;
 
@@ -44,7 +45,7 @@ router.get("/find", async (req, res) => {
 });
 
 // Crear un nuevo jugador
-router.post("/", async (req, res) => {
+router.post("/", protegerRuta('admin'), async (req, res) => {
     try {
         const { nickname, name, country, birthDate, role } = req.body;
 
@@ -79,7 +80,7 @@ router.post("/", async (req, res) => {
 });
 
 // Actualizar un jugador
-router.put("/:id", async (req, res) => {
+router.put("/:id", protegerRuta('admin'), async (req, res) => {
     try {
         const playerId = req.params.id;
         const nuevoDato = req.body;
@@ -119,7 +120,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Eliminar un jugador
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protegerRuta('admin'), async (req, res) => {
     try {
         const playerId = req.params.id;
         const player = await Player.findById(playerId);
@@ -150,7 +151,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // Obtener un jugador por su ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", protegerRuta(), async (req, res) => {
     try {
         const player = await Player.findById(req.params.id);
         if (!player) {
