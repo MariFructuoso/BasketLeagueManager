@@ -25,8 +25,7 @@ export const protegerRuta = (rolRequerido) => {
                 } else { //rol admin puede entrar en manager
                     if (rolRequerido && datos.rol !== rolRequerido && datos.rol !== 'admin') {
                         return res.status(403).json({ error: "Acceso no autorizado", result: null });
-                    }
-                    
+                    }                  
                     req.usuario = datos; 
                     next();
                 }

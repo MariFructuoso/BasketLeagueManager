@@ -2,6 +2,7 @@ import express from 'express';
 import Team from '../models/team.js';
 import Player from '../models/player.js';
 import Match from '../models/match.js';
+import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.get('/', protegerRuta(), async (req, res)=> {
 });
 
 //Crear equipo
-router.post('/', async (req, res) => {
+router.post('/', protegerRuta('admin'), async (req, res) => {
     try {
         const { name } = req.body;
 

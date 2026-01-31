@@ -1,5 +1,6 @@
 import express from "express";
 import Match from "../models/match.js";
+import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 

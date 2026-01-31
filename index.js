@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import express from 'express';
 
+import authRoutes from './routes/auth.js';
+
+
 mongoose.connect('mongodb://localhost:27017/basketleaguemanager');
 
 import playerRoutes from './routes/players.js';
@@ -14,6 +17,7 @@ app.use(express.json());
 app.use('/players', playerRoutes); 
 app.use('/teams', teamRoutes);
 app.use('/matches', matchRoutes); 
+app.use('/auth', authRoutes);
 
 app.listen(8080);
 console.log('Server listening on port 8080');
