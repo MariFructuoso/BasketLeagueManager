@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block titulo %}Basket League{% endblock %}</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/public/css/estilos.css"/>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    
+    {% include "menu.njk" %}
+
+    <div class="container mt-4">
+        {% block contenido %}
+        {% endblock %}
+    </div>
+  
+</body>
+</html>

@@ -6,17 +6,15 @@ import { protegerRuta } from '../auth/auth.js';
 const router = express.Router();
 
 // Obtener todos los jugadores
-router.get("/", protegerRuta(), async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const players = await Player.find();
-
-        if (players.length === 0) {
-            return res.status(404).json({ error: "No existen jugadores registrados", result: null });
-        }
-
-        res.status(200).json({ error: null, result: players });
+        
+        //renderizamos la lista pansado la lista de jugadores
+        res.render('players_list', { players: players });
+        
     } catch (error) {
-        res.status(500).json({ error: "Error interno", result: null });
+        res.status(500).render('error', { error: "Error interno al listar jugadores" });
     }
 });
 

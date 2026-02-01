@@ -1,0 +1,16 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Lista de Jugadores{% endblock %}
+
+{% block contenido %}
+    <h1>Mis Jugadores</h1>
+    <ul>
+        {% for jugador in players %}
+            <li>
+                <strong>{{ jugador.name }}</strong> ({{ jugador.nickname }})
+            </li>
+        {% else %}
+            <li>No hay jugadores todavía.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
