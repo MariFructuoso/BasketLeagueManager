@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import nunjucks from 'nunjucks';
+import methodOverride from 'method-override';
 
 
 import authRoutes from './routes/auth.js';
@@ -10,8 +11,6 @@ import matchRoutes from './routes/matches.js';
 
 
 mongoose.connect('mongodb://localhost:27017/basketleaguemanager');
-
-
 
 const app = express();
 
@@ -23,6 +22,14 @@ express: app
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(methodOverride(function (req, res) {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      let method = req.body._method;
+      delete req.body._method;
+      return method;
+    } 
+}));
 
 //configurar el nunjucks con import/export
 app.use('/bootstrap', express.static('./node_modules/bootstrap/dist'));

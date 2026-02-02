@@ -1,0 +1,77 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Editar Jugador | Basket League{% endblock %}
+
+{% block contenido %}
+
+    <h1>Edición de jugador existente</h1>
+
+    {% if (player) %}
+
+        {% if errores.general %}
+            <div class="alert alert-danger">{{ errores.general }}</div>
+        {% endif %}
+
+        <form action="/players/{{ player.id }}" method="post">
+
+            <div class="mb-3">
+                <label>Nickname:</label>
+                {% if errores.nickname %}
+                    <p class="text-danger">{{ errores.nickname }}</p>
+                {% endif %}
+                <input type="text" class="form-control" name="nickname" 
+                       placeholder="Ej: Air Jordan" value="{{ player.nickname }}"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre Completo:</label>
+                {% if errores.name %}
+                    <p class="text-danger">{{ errores.name }}</p>
+                {% endif %}
+                <input type="text" class="form-control" name="name" 
+                       placeholder="Nombre del jugador..." value="{{ player.name }}"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="country" class="form-label">País (Código 2 letras):</label>
+                {% if errores.country %}
+                    <p class="text-danger">{{ errores.country }}</p>
+                {% endif %}
+                <input type="text" class="form-control" name="country" 
+                       placeholder="Ej: ES, US, FR..." value="{{ player.country }}"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="birthDate" class="form-label">Fecha de Nacimiento:</label>
+                {% if errores.birthDate %}
+                    <p class="text-danger">{{ errores.birthDate }}</p>
+                {% endif %}
+                <input type="date" class="form-control" name="birthDate" 
+                       value="{{ player.birthDate }}"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">Posición / Rol:</label>
+                {% if errores.role %}
+                    <p class="text-danger">{{ errores.role }}</p>
+                {% endif %}
+                <select class="form-select" name="role">
+                    <option value="" disabled>Selecciona una opción</option>
+                    <option value="base" {% if player.role == 'base' %}selected{% endif %}>Base</option>
+                    <option value="escolta" {% if player.role == 'escolta' %}selected{% endif %}>Escolta</option>
+                    <option value="alero" {% if player.role == 'alero' %}selected{% endif %}>Alero</option>
+                    <option value="ala-pivot" {% if player.role == 'ala-pivot' %}selected{% endif %}>Ala-Pívot</option>
+                    <option value="pivot" {% if player.role == 'pivot' %}selected{% endif %}>Pívot</option>
+                    <option value="polivalente" {% if player.role == 'polivalente' %}selected{% endif %}>Polivalente</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="/players" class="btn btn-secondary">Cancelar</a>
+        </form>
+
+    {% else %}
+        <div class="alert alert-danger">Jugador no encontrado</div>
+    {% endif %}
+
+{% endblock %}
