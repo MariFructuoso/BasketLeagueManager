@@ -4,21 +4,17 @@ import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
-//Listar todos los partidos
+//OBETENER PARTIDOS
 router.get("/", protegerRuta(), async (req, res) => {
     try {
         const matches = await Match.find()
             .populate("homeTeam", "name")
             .populate("awayTeam", "name");
 
-        if (matches.length === 0) {
-            return res.status(404).json({ error: "No hay partidos", result: null });
-        }
-
-        res.status(200).json({ error: null, result: matches });
+        res.render('matches_list',{matches:matches});
 
     } catch (error) {
-        res.status(500).json({ error: "Error interno", result: null });
+        res.status(500).render('error',{error:"Error interno al cargar partidos"})
     }
 });
 

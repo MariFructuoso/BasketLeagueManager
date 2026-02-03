@@ -6,28 +6,14 @@ import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
-//Lista de todos los equipos
+//OBTENER EQUIPOS
 router.get('/', protegerRuta(), async (req, res)=> {
     try{
-        const teams = await Team.find();
+        const resultado = await Team.find();
+        res.render(team_list,{teams:resultado});
 
-        if(teams.length ===0)
-        {
-            return res.status(404).json({
-                error: "No existen equipos",
-                result: null
-            })
-        }
-
-        res.status(200).json({
-            error: null,
-            result: teams
-        });
     } catch(error){
-        res.status(500).json({
-            error: "Error del sistema",
-            result: null
-        })
+        res.status(500).render(error,{error: "Error del sistema"})
     }
 });
 
@@ -137,7 +123,7 @@ router.delete('/:id/roster/:playerId', protegerRuta('manager'), async (req, res)
 
         const team = await Team.findById(id);
         if (!team) {
-            return res.status(404).json({ error: "Equipo no encontrado.", result: null });
+            return res.status(404).json({error:"Equipo no encontrado.", result: null});
         }
 
         const rosterAct = team.roster.find(e => 
@@ -145,7 +131,7 @@ router.delete('/:id/roster/:playerId', protegerRuta('manager'), async (req, res)
         );
 
         if (!rosterAct) {
-            return res.status(404).json({ error: "El jugador no está activo en el roster de este equipo", result: null });
+            return res.status(404).json({error:"El jugador no está activo en el roster de este equipo", result: null});
         }
 
         rosterAct.active = false;
@@ -157,28 +143,29 @@ router.delete('/:id/roster/:playerId', protegerRuta('manager'), async (req, res)
         const teamData = updatedTeam.toObject();
         teamData.roster = teamData.roster.filter(entry => entry.active === true);
 
-        res.status(200).json({ error: null, result: teamData });
+        res.status(200).json({error: null, result: teamData});
 
     } catch (error) {
-        res.status(500).json({ error: "Error interno del servidor.", result: null });
+        res.status(500).json({error: "Error interno del servidor.", result: null});
     }
 });
 
-//Busca un equipo por ID y muestra toda la información
-router.get('/:id', protegerRuta(), async (req, res) => {
+//DETALLES DE UN EQUIPO
+router.get('/teams/:id', protegerRuta(), async (req, res) => {
     try {
         const team = await Team.findById(req.params.id).populate('roster.player');
 
         if (!team) {
-            return res.status(404).json({ error: "No existe ese equipo", result: null });
+            return res.status(404).render('error',{error: "No existe ese equipo"});
         }
 
-        const teamData = team.toObject(); //??
-        teamData.roster = teamData.roster.filter(d => d.active === true);
-        res.status(200).json({ error: null, result: teamData });
+        team.roster = team.roster.filter(player=> player.active === true);
+
+        render.render('team_details',{team:team});
+        
 
     } catch (error) {
-        res.status(500).json({ error: "Error interno", result: null });
+        res.status(500).render(error,{error:"Error interno"});
     }
 });
 

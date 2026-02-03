@@ -1,0 +1,25 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Detalles de {{ player.nickname }}{% endblock %}
+
+{% block contenido %}
+
+    <h1>Ficha de Jugador</h1>
+
+    <div class="card">
+        <div class="card-header">
+            {{ player.nickname }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Nombre real: {{ player.name }}</h5>
+            <p class="card-text">
+                <strong>País:</strong> {{ player.country }} <br>
+                <strong>Fecha Nacimiento:</strong> {{ player.birthDate }} <br>
+                <strong>Posición:</strong> {{ player.role }}
+            </p>
+            <hr>
+            <a href="/players/{{ player.id }}/editar" class="btn btn-warning">Editar</a>
+        </div>
+    </div>
+
+{% endblock %}

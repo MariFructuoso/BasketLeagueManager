@@ -5,12 +5,22 @@
 {% block contenido %}
     <h1>Mis Jugadores</h1>
     <ul>
-        {% for jugador in players %}
-            <li>
-                <strong>{{ jugador.name }}</strong> ({{ jugador.nickname }})
-            </li>
-        {% else %}
-            <li>No hay jugadores todavía.</li>
+        {% for player in players %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ player.nickname }}</h5>
+            
+                    <a href="/players/{{ player.id }}" class="btn btn-info">Ver detalles</a>
+
+                    <a href="/players/{{ player.id }}/editar" class="btn btn-warning">Editar</a>
+
+                    <form action="/players/{{ player.id }}" method="post" style="display:inline;">
+                        <input type="hidden" name="_method" value="delete">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+
+                </div>
+            </div>
         {% endfor %}
     </ul>
 {% endblock %}

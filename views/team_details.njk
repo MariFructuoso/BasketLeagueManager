@@ -1,0 +1,47 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Equipo: {{ team.name }}{% endblock %}
+
+{% block contenido %}
+
+    <h1>Detalles del Equipo</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ team.name }}</h2>
+            <p class="text-muted"><strong>Descripción:</strong> {{ team.description }}</p>
+            </div>
+    </div>
+    <h3>Plantilla Actual (Roster)</h3>
+    {% if team.roster.length > 0 %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nickname</th>
+                    <th>Rol</th>
+                    <th>País</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in team.roster %}
+                    <tr>
+                        <td>{{ member.player.nickname }}</td>
+                        <td>{{ member.player.role }}</td>
+                        <td>{{ member.player.country }}</td>
+                        <td>
+                            <a href="/players/{{ member.player.id }}" class="btn btn-sm btn-info">Ver ficha</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">Este equipo no tiene jugadores activos actualmente.</div>
+    {% endif %}
+
+    <div class="mt-3">
+        <a href="/teams" class="btn btn-secondary">Volver al listado de equipos</a>
+    </div>
+
+{% endblock %}
