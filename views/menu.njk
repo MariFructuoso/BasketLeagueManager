@@ -1,9 +1,31 @@
-<nav class="alert alert-primary p-3">
-    <a href="/" class="text-decoration-none text-dark fw-bold me-3">Basket League</a>
+<nav class="alert alert-primary p-3 d-flex justify-content-between align-items-center">    
+    <div>
+        <a href="/" class="text-decoration-none text-dark fw-bold me-3">Basket League</a>
+        
+        <a href="/players" class="btn btn-primary btn-sm">Jugadores</a>
+        <a href="/teams" class="btn btn-secondary btn-sm">Equipos</a>
+        <a href="/matches" class="btn btn-secondary btn-sm">Partidos</a>
 
-    <a href="/players" class="btn btn-primary btn-sm">Jugadores</a>
-    <a href="/teams" class="btn btn-secondary btn-sm">Equipos</a>
-    <a href="/matches" class="btn btn-secondary btn-sm">Partidos</a>
+        {% if session.rol == 'admin' %}
+            <a href="/players/new" class="btn btn-success btn-sm ms-2">Nuevo Jugador</a>           
+            <a href="/teams/new" class="btn btn-success btn-sm ms-2">Nuevo Equipo</a>
+            <a href="/matches/new" class="btn btn-success btn-sm ms-2">Nuevo Partido</a>
+        {% endif %}
+    </div>
+    
+    <div class="d-flex align-items-center">
+        
+        <form class="d-flex me-3" action="/players/find" method="get">
+            <input class="form-control form-control-sm me-1" type="search" name="name" placeholder="Buscar jugador...">
+            <button class="btn btn-outline-dark btn-sm" type="submit">Buscar</button>
+        </form>
 
-    <a href="/auth/login" class="btn btn-success btn-sm float-end">Login</a>
+        {% if session %}
+            <span class="me-2 fw-bold">Hola {{ session.login }}</span>
+            <a href="/auth/logout" class="btn btn-danger btn-sm">Salir</a>
+        {% else %}
+            <a href="/auth/login" class="btn btn-dark btn-sm">Login</a>
+        {% endif %}
+
+    </div>
 </nav>

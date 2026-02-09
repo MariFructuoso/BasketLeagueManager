@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import express from 'express';
 import nunjucks from 'nunjucks';
 import methodOverride from 'method-override';
+import cookieParser from 'cookie-parser'; 
 import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/auth.js';
 import playerRoutes from './routes/players.js';
 import teamRoutes from './routes/teams.js';
 import matchRoutes from './routes/matches.js'; 
+
 
 mongoose.connect('mongodb://localhost:27017/basketleaguemanager');
 
@@ -32,6 +34,8 @@ app.use(methodOverride(function (req, res) {
       return method;
     } 
 }));
+
+app.use(cookieParser());
 
 app.use('/bootstrap', express.static(bootstrapPath));
 app.use('/public', express.static(publicPath));

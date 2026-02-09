@@ -40,6 +40,10 @@ let playerSchema = new mongoose.Schema({
         required: [true, 'El rol es obligatorio'],
         enum: allowedRoles,
         trim: true
+    },
+    image: {
+        type: String,
+        required: false
     }
 });
 

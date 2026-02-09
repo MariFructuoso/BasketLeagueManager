@@ -1,0 +1,29 @@
+{% extends "base.njk" %}
+{% block contenido %}
+    <h2>{{ match.homeTeam.name }} vs {{ match.awayTeam.name }}</h2>
+    <p class="lead">{{ match.homeScore }} - {{ match.awayScore }}</p>
+
+    <table class="table table-sm mt-4">
+        <thead>
+            <tr>
+                <th>Jugador</th>
+                <th>PTS</th>
+                <th>REB</th>
+                <th>AST</th>
+                <th>MVP</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in match.playerStats %}
+            <tr>
+                <td>{{ p.player.name }}</td>
+                <td>{{ p.points }}</td>
+                <td>{{ p.rebounds }}</td>
+                <td>{{ p.assists }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/matches" class="btn btn-secondary btn-sm">Volver</a>
+{% endblock %}

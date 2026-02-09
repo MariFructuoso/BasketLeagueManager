@@ -8,19 +8,13 @@ const allowedStages = [
 ];
 
 let matchScheme = new mongoose.Schema({
-    tournament: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
     date : {
         type: Date,
-        required: true
+        required: [true, 'La fecha es obligatoria']
     },
     stage: {
         type: String,
-        required: true,
+        required: [true, 'La fase del torneo es obligatoria'],
         enum: allowedStages,
         trim: true
     },
@@ -34,12 +28,12 @@ let matchScheme = new mongoose.Schema({
     },
     homeScore: {
         type: Number,
-        required: true,
+        required: [true, 'La puntuación local es obligatoria'],
         min: 0
     },
     awayScore: {
         type: Number,
-        required: true,
+        required: [true, 'La puntuación visitante es obligatoria'],
         min: 0},
     playerStats: [{
         player: {
@@ -71,7 +65,7 @@ let matchScheme = new mongoose.Schema({
     }]
 });
 
-matchScheme.index({ tournament: 1, date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
+matchScheme.index({ date: 1, homeTeam: 1, awayTeam: 1 }, { unique: true });
 
 let Match = mongoose.model("match", matchScheme);
 export default Match;

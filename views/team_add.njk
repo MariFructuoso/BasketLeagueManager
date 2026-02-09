@@ -1,0 +1,31 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Nuevo Equipo{% endblock %}
+
+{% block contenido %}
+    <h1>Crear Nuevo Equipo</h1>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <form action="/teams" method="post">
+        
+        <div class="mb-3">
+            <label class="form-label">Nombre del Equipo:</label>
+            <input type="text" class="form-control" name="name" 
+                   value="{{ datos.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de Fundación:</label>
+            <input type="date" class="form-control" name="foundedAt" 
+                   value="{{ datos.foundedAt }}">
+        </div>
+
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar Equipo</button>
+        <a href="/teams" class="btn btn-secondary mt-3">Cancelar</a>
+
+    </form>
+{% endblock %}

@@ -1,37 +1,32 @@
 import jwt from 'jsonwebtoken';
-
 const secreto = "secretoNode"; 
 
 export const generarToken = (usuario) => {
-    const datos = { 
+    const payload = { 
         login: usuario.login, 
         rol: usuario.rol 
     };
-    return jwt.sign(datos, secreto, { expiresIn: "2 hours" });
+    return jwt.sign(payload, secreto, { expiresIn: "2h" });
 };
 
 export const protegerRuta = (rolRequerido) => {
     return (req, res, next) => {
-        let token = req.headers['authorization'];
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
-        if (token && token.startsWith("Bearer ")) {
-            token = token.slice(7);
+        if (!token) {
+            return res.redirect('/auth/login');
         }
-
-        if (token) {
-            jwt.verify(token, secreto, (err, datos) => {
-                if (err) {
-                    return res.status(401).json({ error: "Token no válido", result: null });
-                } else { //rol admin puede entrar en manager
-                    if (rolRequerido && datos.rol !== rolRequerido && datos.rol !== 'admin') {
-                        return res.status(403).json({ error: "Acceso no autorizado", result: null });
-                    }                  
-                    req.usuario = datos; 
-                    next();
-                }
-            });
-        } else {
-            return res.status(401).json({ error: "Token no proporcionado", result: null });
+        try {
+            const datos = jwt.verify(token, secreto);
+            if (rolRequerido && datos.rol !== rolRequerido) {
+                return res.render('error', { error: "No tienes permisos de administrador" });
+                
+            }
+            req.user = datos;
+            res.locals.session = datos; 
+            next();
+        } catch (error) {
+            return res.redirect('/auth/login');
         }
     };
 };

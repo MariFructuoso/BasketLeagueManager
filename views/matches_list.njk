@@ -5,35 +5,33 @@
 {% block contenido %}
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Listado de Partidos</h1>
-        <a href="/matches/nuevo" class="btn btn-success">Nuevo Partido</a>
+        <h1>Partidos</h1>
+        {% if session.rol == 'admin' %}
+            <a href="/matches/nuevo" class="btn btn-success btn-sm">Nuevo Partido</a>
+        {% endif %}
     </div>
 
     {% if matches.length > 0 %}
-        <div class="row">
+        <ul class="list-group shadow-sm">
             {% for match in matches %}
-                <div class="col-md-6 mb-3">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            {{ match.date.toLocaleDateString() if match.date else "Fecha pendiente" }}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                {{ match.homeTeam.name }} vs {{ match.awayTeam.name }}
-                            </h5>
-                            
-                            <p class="card-text display-6">
-                                {{ match.homeScore }} - {{ match.awayScore }}
-                            </p>                            
-                        </div>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                    <div>
+                        <strong>{{ match.homeTeam.name }}</strong> 
+                        <span class="mx-2 text-primary fw-bold">vs</span> 
+                        <strong>{{ match.awayTeam.name }}</strong>
                     </div>
-                </div>
+                    
+                    <div>
+                        <span class="badge bg-dark me-3">{{ match.homeScore }} - {{ match.awayScore }}</span>
+                        <a href="/matches/{{ match.id }}" class="btn btn-outline-primary btn-sm">Ver detalles</a>
+                    </div>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
 
     {% else %}
-        <div class="alert alert-info">
-            No hay partidos en el sistema.
+        <div class="alert alert-info text-center">
+            No hay partidos registrados en la liga.
         </div>
     {% endif %}
 

@@ -12,12 +12,13 @@
             
                     <a href="/players/{{ player.id }}" class="btn btn-info">Ver detalles</a>
 
-                    <a href="/players/{{ player.id }}/editar" class="btn btn-warning">Editar</a>
+                    <a href="/players/{{ player.id }}/edit" class="btn btn-warning">Editar</a>
 
                     <form action="/players/{{ player.id }}" method="post" style="display:inline;">
                         <input type="hidden" name="_method" value="delete">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
+                    
 
                 </div>
             </div>

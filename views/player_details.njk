@@ -3,23 +3,29 @@
 {% block titulo %}Detalles de {{ player.nickname }}{% endblock %}
 
 {% block contenido %}
-
     <h1>Ficha de Jugador</h1>
 
-    <div class="card">
-        <div class="card-header">
-            {{ player.nickname }}
-        </div>
+    <div class="card" style="width: 18rem;">
+        {% if player.image %}
+            <img src="/public/uploads/{{ player.image }}" class="card-img-top" alt="Foto de {{ player.nickname }}">
+        {% else %}
+            <img src="/public/uploads/no-image.png" class="card-img-top" alt="Sin imagen"> {% endif %}
+        
         <div class="card-body">
-            <h5 class="card-title">Nombre real: {{ player.name }}</h5>
+            <h5 class="card-title">{{ player.nickname }}</h5>
             <p class="card-text">
+                <strong>Nombre:</strong> {{ player.name }} <br>
                 <strong>País:</strong> {{ player.country }} <br>
-                <strong>Fecha Nacimiento:</strong> {{ player.birthDate }} <br>
+                <strong>Fecha:</strong> {{ player.birthDate }} <br>
                 <strong>Posición:</strong> {{ player.role }}
             </p>
-            <hr>
-            <a href="/players/{{ player.id }}/editar" class="btn btn-warning">Editar</a>
+            
+            <a href="/players/{{ player.id }}/edit" class="btn btn-warning">Editar</a>
+            
+            <form action="/players/{{ player.id }}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="btn btn-danger">Borrar</button>
+            </form>
         </div>
     </div>
-
 {% endblock %}

@@ -2,11 +2,26 @@ import express from "express";
 import Player from "../models/player.js";
 import Team from "../models/team.js";
 import { protegerRuta } from '../auth/auth.js';
+import multer from "multer";
 
 const router = express.Router();
 
+router.use(protegerRuta());
+
+// CONFIGURACION MULTER
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads'); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+
 //OBTENER JUGADORES
-router.get("/", protegerRuta(), async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const result = await Player.find();
         res.render('players_list', { players: result });
@@ -16,42 +31,41 @@ router.get("/", protegerRuta(), async (req, res) => {
     }
 });
 
-//Buscar por nombre
-router.get("/find", protegerRuta(), async (req, res) => {
-    try {
-        const nameQuery = req.query.name;
 
-        if (!nameQuery) {
-            return res
-                .status(400)
-                .json({ error: "Fallo en la petición", result: null });
-        }
-        const players = await Player.find({
-            name: { $regex: nameQuery, $options: "i" },
+//BUSCAR POR NOMBRE
+router.get("/find", async (req, res) => {
+    const name = req.query.name;
+    try {
+        const result = await Player.find({
+            name: { $regex: name, $options: "i" },
         });
 
-        if (players.length === 0) {
-            return res.status(404).json({ error: "No existen jugadores con ese nombre", result: null });
+        if (result.length === 0) {
+            return res.render('error', { error: "No hay jugadores con ese nombre"});
         }
 
-        res.status(200).json({ error: null, result: players });
+        res.render('players_list', {players:result});
     } catch (error) {
-        res.status(500).json({ error: "Error interno", result: null });
+        res.render('error', {error:"Error interno"})
     }
 });
 
-// Crear un nuevo jugador
-router.post("/", protegerRuta('admin'), async (req, res) => {
+//FORM DE CREAR JUGADOR
+router.get("/new", protegerRuta('admin'), async (req,res) => {
+    res.render('player_add')
+});
+// CREAR NUEVO JUGADOR
+router.post("/", protegerRuta('admin'), upload.single('image'), async (req, res) => {
     try {
         const { nickname, name, country, birthDate, role } = req.body;
 
-        if (!nickname || !name || !country || !birthDate || !role) {
-            return res.status(400).json({ error: "Datos incorrectos: faltan campos obligatorios", result: null });
-        }
-
         const playerExist = await Player.findOne({ nickname: nickname });
         if (playerExist) {
-            return res.status(400).json({ error: "El jugador ya existe", result: null });
+            let errores = {nickname: "Nickname en uso"};
+            return res.render('player_add', {
+                errores:errores,
+                player:req.body
+            });
         }
 
         const newPlayer = new Player({
@@ -60,22 +74,32 @@ router.post("/", protegerRuta('admin'), async (req, res) => {
             country,
             birthDate: new Date(birthDate),
             role,
+            image: req.file ? req.file.filename : null
         });
 
-        const savedPlayer = await newPlayer.save();
+        await newPlayer.save();
+        res.redirect('/players');
 
-        res.status(201).json({ error: null, result: savedPlayer });
     } catch (error) {
-        if (error.name === "ValidationError") {
-            return res
-                .status(400)
-                .json({ error: "Datos incorrectos: " + error.message, result: null });
+        let errores = {};
+
+        if (error.errors) {
+            if (error.errors.nickname) errores.nickname = error.errors.nickname.message;
+            if (error.errors.name) errores.name = error.errors.name.message;
+            if (error.errors.country) errores.country = error.errors.country.message;
+            if (error.errors.birthDate) errores.birthDate = error.errors.birthDate.message;
+            if (error.errors.role) errores.role = error.errors.role.message;
+        } else {
+            errores.general = "Error general al guardar";
         }
-        res.status(500).json({ error: "Error interno del servidor", result: null });
+        res.render('player_add', { 
+            errores: errores, 
+            player: req.body
+        });
     }
 });
 
-// Eliminar un jugador
+//ELIMINAR
 router.delete("/:id", protegerRuta('admin'), async (req, res) => {
     try {
         const playerId = req.params.id;
@@ -95,18 +119,16 @@ router.delete("/:id", protegerRuta('admin'), async (req, res) => {
 
         await Player.findByIdAndDelete(playerId);
 
-        res.redirect('/players'); //???????????? /players
+        res.redirect('/players'); 
 
     }catch (error){
         res.status(500).render('error', {error:"Error interno al eliminar el jugador"});
     }
 });
 
-
-
 //EDITAR JUGADOR
 //Muestra el formulario con los datos del jugador
-router.get('/:id/editar', protegerRuta('admin'), async (req, res) => {
+router.get('/:id/edit', protegerRuta('admin'), async (req, res) => {
     try {
         const player = await Player.findById(req.params.id);
         
@@ -121,7 +143,7 @@ router.get('/:id/editar', protegerRuta('admin'), async (req, res) => {
 });
 
 //Recibe los datos del formulario cuando pulsas guardar
-router.post('/:id', protegerRuta('admin'), async (req, res) => {
+router.post('/:id', protegerRuta('admin'), upload.single('image'), async (req, res) => {
     try {
         const player = await Player.findById(req.params.id);
 
@@ -145,10 +167,12 @@ router.post('/:id', protegerRuta('admin'), async (req, res) => {
         player.country = req.body.country;
         player.birthDate = req.body.birthDate;
         player.role = req.body.role;
+        if (req.file) {
+            player.image = req.file.filename;
+        }
 
         await player.save();
-
-        res.redirect('/players'); //?????????????????????????
+        res.redirect('/players');
 
     } catch (error) {
         let errores = {};

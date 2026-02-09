@@ -1,0 +1,59 @@
+{% extends "base.njk" %}
+
+{% block titulo %}Nuevo Partido | Basket League{% endblock %}
+
+{% block contenido %}
+
+    <h1>Registrar Nuevo Partido</h1>
+
+    {# Mensaje de error general si existe #}
+    {% if errores.general %}
+        <div class="alert alert-danger">{{ errores.general }}</div>
+    {% endif %}
+
+    <form action="/matches" method="post">
+        
+        <div class="mb-3">
+            <label class="form-label">Fecha:</label>
+            <input type="date" class="form-control" name="date" value="{{ match.date }}">
+            {% if errores.date %}
+                <p class="text-danger">{{ errores.date }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fase del Torneo:</label>
+            <select class="form-select" name="stage">
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="Group" {% if match.stage == 'Group' %}selected{% endif %}>Fase de Grupos</option>
+                <option value="Quarterfinal" {% if match.stage == 'Quarterfinal' %}selected{% endif %}>Cuartos de Final</option>
+                <option value="Semifinal" {% if match.stage == 'Semifinal' %}selected{% endif %}>Semifinal</option>
+                <option value="Final" {% if match.stage == 'Final' %}selected{% endif %}>Final</option>
+            </select>
+            {% if errores.stage %}
+                <p class="text-danger">{{ errores.stage }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Puntos Local:</label>
+            <input type="number" class="form-control" name="homeScore" value="{{ match.homeScore | default(0) }}" min="0">
+            {% if errores.homeScore %}
+                <p class="text-danger">{{ errores.homeScore }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Puntos Visitante:</label>
+            <input type="number" class="form-control" name="awayScore" value="{{ match.awayScore | default(0) }}" min="0">
+            {% if errores.awayScore %}
+                <p class="text-danger">{{ errores.awayScore }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Partido</button>
+        <a href="/matches" class="btn btn-secondary">Cancelar</a>
+        
+    </form>
+
+{% endblock %}
