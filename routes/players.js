@@ -31,7 +31,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-
 //BUSCAR POR NOMBRE
 router.get("/find", async (req, res) => {
     const name = req.query.name;
@@ -142,7 +141,7 @@ router.get('/:id/edit', protegerRuta('admin'), async (req, res) => {
     }
 });
 
-//Recibe los datos del formulario cuando pulsas guardar
+
 router.post('/:id', protegerRuta('admin'), upload.single('image'), async (req, res) => {
     try {
         const player = await Player.findById(req.params.id);
@@ -194,7 +193,7 @@ router.post('/:id', protegerRuta('admin'), upload.single('image'), async (req, r
 });
 
 //VER DETALLES DE UN JUGADOR
-router.get("/:id", protegerRuta(), async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const resultado = await Player.findById(req.params.id);
         if (!resultado) {

@@ -5,6 +5,8 @@ import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
+router.use(protegerRuta());
+
 //OBETENER PARTIDOS
 router.get("/", async (req, res) => {
     try {

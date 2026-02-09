@@ -6,8 +6,10 @@ import { protegerRuta } from '../auth/auth.js';
 
 const router = express.Router();
 
+router.use(protegerRuta());
+
 //OBTENER EQUIPOS
-router.get('/', protegerRuta(), async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const resultado = await Team.find();
         res.render('teams_list', { teams: resultado });
@@ -225,7 +227,7 @@ router.delete('/:id', protegerRuta('admin'), async (req, res) => {
     }
 });
 //DETALLES DE UN EQUIPO
-router.get('/:id', protegerRuta(), async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const team = await Team.findById(req.params.id).populate('roster.player');
 
